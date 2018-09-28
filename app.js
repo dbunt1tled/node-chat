@@ -17,14 +17,29 @@ app.get('/', (req,res) => {
     res.sendFile(`${__dirname}/index.html`);
 });
 
-const userNames = {};
+const usernames = {};
 const rooms = ['room 1','room 2','some other room',];
 const defaultRoom = rooms[0];
 
 io.on('connection', socket =>{
     let isUser = false;
     socket.emit('rooms', rooms);
-    socket.on('new user', name => {});
+    socket.on('new user', name => {
+        if(isUser) {
+            return
+        }
+        socket.username = name;
+        usernames[name] = {room:defaultRoom, id: socket.id};
+        isUser = true;
+        socket.room = defaultRoom;
+        socket.join(defaultRoom);
+        socket.emit('welcome', socket.room);
+        socket.broadcast.to(socket.room).emit('new user joined', socket.username);
+
+        io.emit('roommates', {usernames, room: socket.room});
+        io.emit('updateusers', {usernames});
+
+    });
     socket.on('disconnect', () => {});
     socket.on('message', msg => {});
     socket.on('roomchange', index => {});
