@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/materialize.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="login">
+    <form action="" class="login-form" name="login-form">
+        <input autofocus type="text" name="username" class="username" autocomplete="off">
+    </form>
+</div>
+<div class="authorized">
+    <nav>
+        <div class="row">
+            <div class="col s12">
+                <div class="nav-wrapper">
+                    <div class="open-nav left">
+                        <a href="#" class="brand-logo left">Chat</a>
+                        <a href="#" data-target="slide-out" class="slidenav-trigger"><i class="material-icons">menu</i></a>
+                    </div>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><i class="large material-icons">account_circle</i></li>
+                        <li class="username">sid</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <ul id="slide-out" class="slidenav rooms-list">
+        <li><a href="#!">Room list</a></li>
+        <li>
+            <div class="divider"></div>
+        </li>
+    </ul>
+    <div class="chat-container">
+        <div class="row">
+            <div class="col m9">
+                <div class="chat-room">
+                    <div class="message-container"></div>
+                </div>
+                <div class="message-form">
+                    <form action="" name="send-message" class="send-message">
+                        <div class="row">
+                            <div class="input-field col xl12">
+                                <i class="material-icons prefix">mode_edit</i>
+                                <input type="text" id="message" name="message">
+                                <label for="message">Message</label>
+                            </div>
+                            <div class="input-field col xl12">
+                                <button>Send</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="col xl3">
+                <div class="user-list-wrapper">
+                    <div class="col s12"><h6>Users</h6></div>
+                    <ul class="collection user-list"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/script.js"></script>
+<script src="/js/jquery-3.3.1.slim.min.js"></script>
+<script src="/js/materialize.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+
+</body>
+</html>

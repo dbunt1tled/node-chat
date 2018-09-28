@@ -1,0 +1,87 @@
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+}
+ul{
+    list-style-type: none;margin: 0; padding: 0;
+}
+body {
+    font: 13px Helvetica, Arial;
+}
+a{
+    text-decoration: none;
+}
+.login{
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background: black;
+    display: flex;
+    align-items: center;
+}
+.login-form{
+    width: 50%;
+    margin: 0 auto;
+}
+.username, .username:focus {
+    outline: none;
+    width: 100%;
+    color: white;
+    font-size: 25px;
+    line-height: 50px;
+    border-bottom: 2px solid white;
+    border-top: none;
+    border-right: none;
+    border-left: none;
+}
+.authorized{
+    display: none;
+}
+.changeRoom {
+    margin: 10px 0;
+}
+.changeRoom:hover {
+    margin: 10px 0;
+}
+.user-name {
+    margin-left: 15px;
+}
+.nav-wrapper .slidenav-trigger {
+    display: block;
+}
+.nav-wrapper .brand-logo {
+    position: static;
+}
+.chat-container .row{
+    margin-bottom: 0;
+}
+.chat-room {
+    height: calc(100vh - 60px);
+    display: flex;
+    flex-direction: column;
+}
+.chat-room .message-form {
+    margin-top: auto;
+}
+.chat-room .message-container {
+    flex-grow: 1;
+    max-height: 50%;
+    overflow-y: auto;
+}
+.message-form .row {
+    margin-bottom: 0;
+}
+.user-list-wrapper {
+    height: calc(100vh - 60px);
+    overflow-y: auto;
+    box-shadow: -11px 0 19px rgba(0,0,0,0.5);
+}
+.message {
+    overflow: hidden;
+}
+.message.from .card {
+    float: right;
+}
+.message.to .card {
+    float: left;
+    background-color: #00897b;
+}
