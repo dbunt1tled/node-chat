@@ -33,14 +33,42 @@ io.on('connection', socket =>{
         isUser = true;
         socket.room = defaultRoom;
         socket.join(defaultRoom);
-        socket.emit('welcome', socket.room);
-        socket.broadcast.to(socket.room).emit('new user joined', socket.username);
-
+        socket.emit('welcome', {data:usernames[name],username:socket.username});
+        socket.broadcast.to(socket.room).emit('new user joined', {username:socket.username});
         io.emit('roommates', {usernames, room: socket.room});
-        io.emit('updateusers', {usernames});
+        io.emit('updateusers', {usernames, room: socket.room});
 
     });
     socket.on('disconnect', () => {});
-    socket.on('message', msg => {});
-    socket.on('roomchange', index => {});
+    socket.on('message', msg => {
+        for(let user in usernames) {
+            if(usernames.hasOwnProperty(user) && usernames[user].id === socket.id){
+                socket.room = usernames[user].room;
+                let data = usernames[user];
+                data.msg = msg;
+                data.username = socket.username;
+                data.own = true;
+                socket.emit('chat message own', {data});
+                data.own = false;
+                socket.broadcast.to(socket.room).emit('chat message', {data});
+            }
+        }
+    });
+    socket.on('roomchange', index => {
+        socket.broadcat.to(socket.room).emit('has left the room', socket.username);
+        socket.broadcat.to(socket.room).emit('userswitchedroom', {
+            usernames, name: socket.username, room: socket.room,
+        });
+        socket.leave(socket.room);
+        socket.room = rooms[index];
+        console.log(usernames[socket.username]);
+        usernames[socket.username].room = rooms[index];
+        socket.join(socket.room);
+
+        socket.emit('welcome', {data:usernames[name],username:socket.username});
+        socket.broadcast.to(socket.room).emit('new user joined', {username:socket.username});
+        io.emit('roommates', {usernames, room: socket.room});
+        io.emit('updateusers', {usernames, room: socket.room});
+
+    });
 });

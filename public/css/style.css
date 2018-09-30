@@ -24,14 +24,10 @@ a{
 }
 .username, .username:focus {
     outline: none;
-    width: 100%;
+    /*width: 100%;/**/
     color: white;
     font-size: 25px;
-    line-height: 50px;
-    border-bottom: 2px solid white;
-    border-top: none;
-    border-right: none;
-    border-left: none;
+    line-height: 60px;
 }
 .authorized{
     display: none;
@@ -83,5 +79,8 @@ a{
 }
 .message.to .card {
     float: left;
-    background-color: #00897b;
+    background-color: #00897b!important;
+}
+#nav-mobile li {
+    display: inline-block;
 }
