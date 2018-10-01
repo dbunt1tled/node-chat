@@ -11,15 +11,19 @@ class UI {
     showLogin() {
         this.login.style.display = 'block';
     }
+
     hideLogin() {
         this.login.style.display = 'none';
     }
+
     showAuthorized() {
         this.authorized.style.display = 'block';
     }
+
     hideAuthorized() {
         this.authorized.style.display = 'none';
     }
+
     setUserInfo(user) {
         let data = {
             username: 'roomBot',
@@ -28,8 +32,19 @@ class UI {
         }
         this.addMessage(data);
         this.usernameInfo.innerHTML = user.username;
-        this.usernameInfo.setAttribute('data-id',user.data.id);
+        this.usernameInfo.setAttribute('data-id', user.data.id);
     }
+
+    leftUser(user) {
+        console.log('left', user);
+        let data = {
+            username: 'roomBot',
+            msg: `${user} has left the room `,
+            own: true,
+        }
+        this.addMessage(data);
+    }
+
     joinedUser(user) {
         let data = {
             username: 'roomBot',
@@ -38,37 +53,49 @@ class UI {
         }
         this.addMessage(data);
     }
+
     generateRooms(rooms) {
+        this.clearRooms();
         if (rooms.length === 0) {
             return false;
         }
-        rooms.forEach( room => {
-            this.roomList.insertAdjacentHTML('beforeend',UI.roomListTemplate(room));
+        rooms.forEach((room, index) => {
+            this.roomList.insertAdjacentHTML('beforeend', UI.roomListTemplate(room, index));
         });
     }
+
     generateUsersRooms(users, room) {
-        this.clearRooms();
+        this.clearUsers();
         for (let user in users) {
-            if(users.hasOwnProperty(user) && room === users[user].room){
-                this.usersList.insertAdjacentHTML('beforeend',UI.usersListTemplate(user,users[user]));
+            if (users.hasOwnProperty(user) && room === users[user].room) {
+                this.usersList.insertAdjacentHTML('beforeend', UI.usersListTemplate(user, users[user]));
             }
         }
     }
-    clearRooms() {
+
+    clearUsers() {
         this.usersList.innerHTML = '';
     }
+
+    clearRooms() {
+        this.roomList.innerHTML = '';
+    }
+
     addMessage(data) {
-        this.messageContainer.insertAdjacentHTML('beforeend',UI.messageTemplate(data));
+        this.messageContainer.insertAdjacentHTML('beforeend', UI.messageTemplate(data));
     }
-    static roomListTemplate(room) {
-        return `<li><a href="#" class="waves-effect">${room}</a></li>`;
+
+    static roomListTemplate(room, index) {
+        return `<li><a href="#" class="waves-effect" data-room-index="${index}">${room}</a></li>`;
     }
-    static usersListTemplate(user,info) {
+
+    static usersListTemplate(user, info) {
         return `<li class="collection-item" data-user-id="${info.id}"><a href="#" class="waves-effect">${user}</a></li>`;
     }
+
     static messageTemplate(data) {
         let classOwn = 'to';
-        if(data.own){
+        if (data.own) {
             classOwn = 'from';
         }
         return `<div class="message ${classOwn}">

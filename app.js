@@ -33,42 +33,55 @@ io.on('connection', socket =>{
         isUser = true;
         socket.room = defaultRoom;
         socket.join(defaultRoom);
+        //send who make qequest
         socket.emit('welcome', {data:usernames[name],username:socket.username});
+        // send all in room except myself
         socket.broadcast.to(socket.room).emit('new user joined', {username:socket.username});
+        // send all in room
+        // io.sockets.in(socket.room).emit('Yo',{username:socket.username});
         io.emit('roommates', {usernames, room: socket.room});
-        io.emit('updateusers', {usernames, room: socket.room});
+
+        io.emit('updateusers', {usernames: usersInRoom(usernames,socket.room), room: socket.room});
 
     });
     socket.on('disconnect', () => {});
     socket.on('message', msg => {
-        for(let user in usernames) {
-            if(usernames.hasOwnProperty(user) && usernames[user].id === socket.id){
-                socket.room = usernames[user].room;
-                let data = usernames[user];
-                data.msg = msg;
-                data.username = socket.username;
-                data.own = true;
-                socket.emit('chat message own', {data});
-                data.own = false;
-                socket.broadcast.to(socket.room).emit('chat message', {data});
-            }
-        }
+        let data = usernames[socket.username];
+        data.msg = msg;
+        data.username = socket.username;
+        data.own = true;
+        socket.emit('chat message own', {data});
+        data.own = false;
+        socket.broadcast.to(socket.room).emit('chat message', {data});
     });
     socket.on('roomchange', index => {
-        socket.broadcat.to(socket.room).emit('has left the room', socket.username);
-        socket.broadcat.to(socket.room).emit('userswitchedroom', {
+        let oldRoom = socket.room;
+        socket.broadcast.to(oldRoom).emit('userswitchedroom', {
             usernames, name: socket.username, room: socket.room,
         });
         socket.leave(socket.room);
+
         socket.room = rooms[index];
-        console.log(usernames[socket.username]);
         usernames[socket.username].room = rooms[index];
         socket.join(socket.room);
-
-        socket.emit('welcome', {data:usernames[name],username:socket.username});
+        socket.emit('welcome', {data:usernames[socket.username],username:socket.username});
         socket.broadcast.to(socket.room).emit('new user joined', {username:socket.username});
-        io.emit('roommates', {usernames, room: socket.room});
-        io.emit('updateusers', {usernames, room: socket.room});
+        io.emit('roommates', {usernames: usersInRoom(usernames,socket.room), room: socket.room});
+
+        io.emit('updateusers', {usernames: usersInRoom(usernames,socket.room), room: socket.room});
+        socket.broadcast.to(oldRoom).emit('has left room', socket.username);
+        socket.broadcast.to(oldRoom).emit('updateusers', {usernames: usersInRoom(usernames,oldRoom), room: oldRoom});
+
 
     });
+
+    function usersInRoom(users,room) {
+        let resultUser = {};
+        for(let user in users) {
+            if(usernames.hasOwnProperty(user) && users[user].room === room){
+                resultUser[user] = users[user]
+            }
+        }
+        return resultUser;
+    }
 });
